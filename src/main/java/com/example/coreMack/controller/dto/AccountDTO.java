@@ -16,7 +16,7 @@ public class AccountDTO {
     private String username;
     private String name;
     private String lastName;
-    @Pattern(regexp = "^\\+[0-9]{11}")
+    @Pattern(regexp = "^\\+[0-9]{12}")
     private String mobileNo;
 
 
