@@ -14,6 +14,9 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import java.time.Duration;
 
 @SpringBootApplication
+/**
+ * NoSQL storage systems provide an alternative to classical RDBMS for horizontal scalability and speed.
+ */
 public class CoreMackApplication {
 
 	public static void main(String[] args) {
