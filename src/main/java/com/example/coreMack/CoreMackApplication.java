@@ -16,6 +16,7 @@ import java.time.Duration;
 @SpringBootApplication
 /**
  * NoSQL storage systems provide an alternative to classical RDBMS for horizontal scalability and speed.
+ * redis in-memory key-value store .value type could be {string , list , set , orderedSet , stream}
  */
 public class CoreMackApplication {
 
@@ -49,7 +50,13 @@ public class CoreMackApplication {
 	}
 	@Bean
 	/**
-	 * spring Template classes is a abstraction layer over low level api that use -- callback -- approach
+	 * spring Template classes is a abstraction layer over low level api that use -- callback -- approach ,
+	 * these classes implement 'Template method pattern',
+	 * In a nutshell, this pattern defines the skeleton of an algorithm as an abstract class,
+	 * allowing its subclasses to provide concrete behavior.
+	 * a template method that makes a series of method calls in a specific order to perform the steps of an algorithm.
+	 * in case of RedisTemplate it will get connection, do the exception translations , ... , release connection as an ordered steps.
+	 *
 	 * While 'RedisConnection' offers low-level methods that accept and return binary values (byte arrays),
 	 * the template takes care of serialization and connection management, freeing the user from dealing with such details.
 	 *
