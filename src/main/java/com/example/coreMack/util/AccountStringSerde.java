@@ -1,5 +1,6 @@
 package com.example.coreMack.util;
 
+import com.example.coreMack.customizedExceptions.MySerializationException;
 import com.example.coreMack.model.AccountInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,10 +14,12 @@ import java.util.Objects;
 @Component
 public class AccountStringSerde {
     private ObjectMapper jacksonObjectMapper;
+
     @Autowired
     public AccountStringSerde(ObjectMapper objectMapper){
         this.jacksonObjectMapper=objectMapper;
     }
+
     public String serializeAccountInfo(AccountInfo accountInfo){
         if (accountInfo==null)
             return null;
@@ -24,8 +27,8 @@ public class AccountStringSerde {
             return jacksonObjectMapper.writeValueAsString(accountInfo);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            throw new MySerializationException(accountInfo);
         }
-        return "";
     }
     public AccountInfo deserializeAccountInfo(String accountInfoAsString){
         if (accountInfoAsString==null)

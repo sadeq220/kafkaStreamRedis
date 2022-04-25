@@ -1,2 +1,3 @@
-package com.example.coreMack.dao;public interface RedisDao {
+package com.example.coreMack.dao;
+public interface RedisDao {
 }
