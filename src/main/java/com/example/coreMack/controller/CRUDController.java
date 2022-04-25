@@ -1,5 +1,6 @@
 package com.example.coreMack.controller;
 
+import com.example.coreMack.controller.dto.AccountDTO;
 import com.example.coreMack.dao.RedisTemplateDao;
 import com.example.coreMack.model.AccountInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/")
@@ -24,7 +27,8 @@ public class CRUDController {
         this.redisTemplateDao=redisTemplateDao;
     }
     @PostMapping("/persist/Account")
-    public ResponseEntity persistAccount(@RequestBody AccountInfo accountInfo){
+    public ResponseEntity persistAccount(@RequestBody @Valid AccountDTO accountDTO){
+        AccountInfo accountInfo = AccountDTO.buildAccount(accountDTO);
         redisTemplateDao.persistAccountInfo(accountInfo);
         return ResponseEntity.ok(accountInfo.getAccountNo());
     }
