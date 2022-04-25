@@ -38,7 +38,7 @@ public class CoreMackApplication {
 	public JedisConnectionFactory jedisConnectionFactory(){
 		// fluent API
 		JedisClientConfiguration jedisClientConfiguration = JedisClientConfiguration.builder().
-				readTimeout(Duration.ofMillis(500l)).
+				readTimeout(Duration.ofMillis(500L)).
 				usePooling().
 				build();
 		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisStandaloneConfiguration(),jedisClientConfiguration);

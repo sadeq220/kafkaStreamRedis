@@ -1,2 +1,3 @@
-package com.example.coreMack.controller;public class CRUDController {
+package com.example.coreMack.controller;
+public class CRUDController {
 }
