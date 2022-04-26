@@ -1,8 +1,11 @@
 package com.example.coreMack.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@JsonInclude(content = JsonInclude.Include.NON_NULL)
 public class AccountInfo extends CustomerInfo{
     private String AccountNo;
     private BigDecimal amount;
