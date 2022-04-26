@@ -69,7 +69,7 @@ public class RedisTemplateDao {
      *
      * All readonly operations, such as KEYS, are piped to a fresh (non-thread-bound) RedisConnection.
      */
-    public TrackAccount issueRequest(IssueRequest issueRequest,AccountInfo accountInfo){
+    public TrackAccount withdrawMoney(IssueRequest issueRequest, AccountInfo accountInfo){
 
         TrackAccount trackAccount = new TrackAccount(accountInfo.getAccountNo(), Operation.WITHDRAW);
         String trackAccountAsString = coreModelStringSerde.serializeCoreModel(trackAccount);

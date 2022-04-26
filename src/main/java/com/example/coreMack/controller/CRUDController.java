@@ -5,8 +5,7 @@ import com.example.coreMack.controller.dto.IssueRequest;
 import com.example.coreMack.dao.RedisTemplateDao;
 import com.example.coreMack.model.AccountInfo;
 import com.example.coreMack.model.TrackAccount;
-import com.example.coreMack.service.WithdrawMoney;
-import org.apache.coyote.Response;
+import com.example.coreMack.service.MoneyTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +22,11 @@ import javax.validation.Valid;
  */
 public class CRUDController {
     private RedisTemplateDao redisTemplateDao;
-    private WithdrawMoney withdrawMoney;
+    private MoneyTransfer moneyTransfer;
     @Autowired
-    public CRUDController(RedisTemplateDao redisTemplateDao,WithdrawMoney withdrawMoney){
+    public CRUDController(RedisTemplateDao redisTemplateDao, MoneyTransfer moneyTransfer){
         this.redisTemplateDao=redisTemplateDao;
-        this.withdrawMoney=withdrawMoney;
+        this.moneyTransfer = moneyTransfer;
     }
     @PostMapping("/persist/account")
     public ResponseEntity persistAccount(@RequestBody @Valid AccountDTO accountDTO){
@@ -42,7 +41,7 @@ public class CRUDController {
     }
     @PutMapping("/issueRequest")
     public ResponseEntity issueDocument(@RequestBody @Valid IssueRequest issueRequest){
-        TrackAccount trackAccount = withdrawMoney.issueRequest(issueRequest);
+        TrackAccount trackAccount = moneyTransfer.issueRequest(issueRequest);
         return ResponseEntity.ok(trackAccount);
     }
 }

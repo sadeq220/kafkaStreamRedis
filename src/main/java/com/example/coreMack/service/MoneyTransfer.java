@@ -5,18 +5,18 @@ import com.example.coreMack.dao.RedisTemplateDao;
 import com.example.coreMack.model.AccountInfo;
 import com.example.coreMack.model.TrackAccount;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WithdrawMoney {//implements SessionCallback {
+public class MoneyTransfer {//implements SessionCallback {
     private RedisTemplateDao redisTemplateDao;
     @Autowired
-    public WithdrawMoney(RedisTemplateDao redisTemplateDao){
+    public MoneyTransfer(RedisTemplateDao redisTemplateDao){
         this.redisTemplateDao=redisTemplateDao;
     }
     public TrackAccount issueRequest(IssueRequest issueRequest){
         AccountInfo account = redisTemplateDao.getAccount(issueRequest.getAccountNo());
-        return redisTemplateDao.issueRequest(issueRequest, account);
+        // if issueRequest.operation==WITHDRAW
+        return redisTemplateDao.withdrawMoney(issueRequest, account);
     }
 }
