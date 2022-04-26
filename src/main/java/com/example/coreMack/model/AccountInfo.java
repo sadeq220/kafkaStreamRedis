@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @JsonInclude(content = JsonInclude.Include.NON_NULL)
-public class AccountInfo extends CustomerInfo{
+public class AccountInfo extends CustomerInfo implements RedisModelCoreBank{
     private String AccountNo;
     private BigDecimal amount;
     private String lastModificationTrackNo;

@@ -9,7 +9,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class CentralExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MySerializationException.class)
     public ResponseEntity handleSerializeException(MySerializationException mySerializationException){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).
-                body("this provided AccountInfo can not serialized :"+mySerializationException.getAccountInfo());
+                body("this provided AccountInfo can not serialized :"+mySerializationException.getCoreModel());
     }
 
     @Override

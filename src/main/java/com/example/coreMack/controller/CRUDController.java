@@ -1,8 +1,11 @@
 package com.example.coreMack.controller;
 
 import com.example.coreMack.controller.dto.AccountDTO;
+import com.example.coreMack.controller.dto.IssueRequest;
 import com.example.coreMack.dao.RedisTemplateDao;
 import com.example.coreMack.model.AccountInfo;
+import com.example.coreMack.model.TrackAccount;
+import com.example.coreMack.service.WithdrawMoney;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +23,26 @@ import javax.validation.Valid;
  */
 public class CRUDController {
     private RedisTemplateDao redisTemplateDao;
+    private WithdrawMoney withdrawMoney;
     @Autowired
-    public CRUDController(RedisTemplateDao redisTemplateDao){
+    public CRUDController(RedisTemplateDao redisTemplateDao,WithdrawMoney withdrawMoney){
         this.redisTemplateDao=redisTemplateDao;
+        this.withdrawMoney=withdrawMoney;
     }
     @PostMapping("/persist/account")
     public ResponseEntity persistAccount(@RequestBody @Valid AccountDTO accountDTO){
         AccountInfo accountInfo = AccountDTO.buildAccount(accountDTO);
         redisTemplateDao.persistAccountInfo(accountInfo);
-        return ResponseEntity.ok(accountInfo.getAccountNo());
+        return ResponseEntity.ok(accountInfo);
     }
     @GetMapping("/account/{accountNo}")
     public ResponseEntity getAccount(@PathVariable String accountNo){
         AccountInfo account = redisTemplateDao.getAccount(accountNo);
         return ResponseEntity.ok(account);
+    }
+    @PutMapping("/issueRequest")
+    public ResponseEntity issueDocument(@RequestBody @Valid IssueRequest issueRequest){
+        TrackAccount trackAccount = withdrawMoney.issueRequest(issueRequest);
+        return ResponseEntity.ok(trackAccount);
     }
 }

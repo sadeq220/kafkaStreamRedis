@@ -1,13 +1,17 @@
 package com.example.coreMack.dao;
 
+import com.example.coreMack.controller.dto.IssueRequest;
 import com.example.coreMack.model.AccountInfo;
-import com.example.coreMack.util.AccountStringSerde;
+import com.example.coreMack.model.Operation;
+import com.example.coreMack.model.TrackAccount;
+import com.example.coreMack.util.CoreModelStringSerde;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,7 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class RedisTemplateDao {
 
     private StringRedisTemplate redisTemplate;
-    private AccountStringSerde accountStringSerde;
+    private CoreModelStringSerde coreModelStringSerde;
     private ValueOperations<String,String> valueOperations;
     private HashOperations hashOperations;
 
@@ -29,8 +33,8 @@ public class RedisTemplateDao {
      * ValueOperations, ListOperations, SetOperations, HashOperations, StreamOperations, etc.
      */
     public RedisTemplateDao(StringRedisTemplate redisTemplate,
-                            AccountStringSerde accountStringSerde){
-        this.accountStringSerde=accountStringSerde;
+                            CoreModelStringSerde coreModelStringSerde){
+        this.coreModelStringSerde = coreModelStringSerde;
         this.redisTemplate=redisTemplate;
         valueOperations= redisTemplate.opsForValue();
     }
@@ -41,16 +45,43 @@ public class RedisTemplateDao {
      * Redis Hashes can hold an n number of key-value pairs and are designed to use less memory, making it a great way for storing objects in-memory
      * Hash map name,Hash key ,value
      */
+    @Transactional
     public void persistAccountInfo(AccountInfo accountInfo){
         Assert.notNull(accountInfo.getAccountNo(),"accountNo must not be null");
-        String accountInfoAsString = accountStringSerde.serializeAccountInfo(accountInfo);
+        String accountInfoAsString = coreModelStringSerde.serializeCoreModel(accountInfo);
         valueOperations.set(accountInfo.getAccountNo(),accountInfoAsString);
     }
+
     public AccountInfo getAccount(String accountNo){
         Assert.notNull(accountNo,"accountNo must not be null");
         String accountAsString = valueOperations.get(accountNo);
         if (accountAsString==null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,accountNo+" doesn't exist !");
-        return accountStringSerde.deserializeAccountInfo(accountAsString);
+        return coreModelStringSerde.deserializeCoreModel(accountAsString);
+    }
+
+    @Transactional
+    /**
+     * transaction begins with redisTemplate.multi()
+     * If the transaction finishes without errors, EXEC is called.
+     * Otherwise DISCARD is called.
+     * Once in MULTI, RedisConnection queues write operations.
+     *
+     * All readonly operations, such as KEYS, are piped to a fresh (non-thread-bound) RedisConnection.
+     */
+    public TrackAccount issueRequest(IssueRequest issueRequest,AccountInfo accountInfo){
+
+        TrackAccount trackAccount = new TrackAccount(accountInfo.getAccountNo(), Operation.WITHDRAW);
+        String trackAccountAsString = coreModelStringSerde.serializeCoreModel(trackAccount);
+        valueOperations.set(trackAccount.getTrackNo(),trackAccountAsString);
+
+        // assume issueRequest always have a Withdraw operation
+        // update account info
+        accountInfo.setAmount(accountInfo.getAmount().subtract(issueRequest.getAmount()));
+        accountInfo.setLastModificationTrackNo(trackAccount.getTrackNo());
+        String accountAsSerde = coreModelStringSerde.serializeCoreModel(accountInfo);
+        valueOperations.set(accountInfo.getAccountNo(),accountAsSerde);
+
+        return trackAccount;
     }
 }

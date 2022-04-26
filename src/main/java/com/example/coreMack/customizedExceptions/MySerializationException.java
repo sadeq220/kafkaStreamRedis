@@ -1,16 +1,16 @@
 package com.example.coreMack.customizedExceptions;
 
 
-import com.example.coreMack.model.AccountInfo;
+import com.example.coreMack.model.RedisModelCoreBank;
 
 public class MySerializationException extends RuntimeException {
-    private AccountInfo accountInfo;
-    public MySerializationException(AccountInfo accountInfo){
+    private RedisModelCoreBank accountInfo;
+    public MySerializationException(RedisModelCoreBank accountInfo){
         super("provided AccountInfo can not serialized");
         this.accountInfo=accountInfo;
     }
 
-    public AccountInfo getAccountInfo() {
+    public RedisModelCoreBank getCoreModel() {
         return accountInfo;
     }
 }

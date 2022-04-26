@@ -2,6 +2,7 @@ package com.example.coreMack.util;
 
 import com.example.coreMack.customizedExceptions.MySerializationException;
 import com.example.coreMack.model.AccountInfo;
+import com.example.coreMack.model.RedisModelCoreBank;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,18 +10,17 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 @Component
-public class AccountStringSerde {
+public class CoreModelStringSerde {
     private ObjectMapper jacksonObjectMapper;
 
     @Autowired
-    public AccountStringSerde(ObjectMapper objectMapper){
+    public CoreModelStringSerde(ObjectMapper objectMapper){
         this.jacksonObjectMapper=objectMapper;
     }
 
-    public String serializeAccountInfo(AccountInfo accountInfo){
+    public String serializeCoreModel(RedisModelCoreBank accountInfo){
         if (accountInfo==null)
             return null;
         try {
@@ -30,7 +30,7 @@ public class AccountStringSerde {
             throw new MySerializationException(accountInfo);
         }
     }
-    public AccountInfo deserializeAccountInfo(String accountInfoAsString){
+    public AccountInfo deserializeCoreModel(String accountInfoAsString){
         if (accountInfoAsString==null)
             return null;
         if (accountInfoAsString.isBlank())
