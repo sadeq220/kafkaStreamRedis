@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Properties;
+
 @Repository
 /**
  * '@Repository' for exception translations
@@ -37,6 +39,7 @@ public class RedisTemplateDao {
         this.coreModelStringSerde = coreModelStringSerde;
         this.redisTemplate=redisTemplate;
         valueOperations= redisTemplate.opsForValue();
+        this.hashOperations= redisTemplate.opsForHash();
     }
 
     /**
@@ -71,9 +74,10 @@ public class RedisTemplateDao {
      */
     public TrackAccount withdrawMoney(IssueRequest issueRequest, AccountInfo accountInfo){
 
-        TrackAccount trackAccount = new TrackAccount(accountInfo.getAccountNo(), Operation.WITHDRAW);
-        String trackAccountAsString = coreModelStringSerde.serializeCoreModel(trackAccount);
-        valueOperations.set(trackAccount.getTrackNo(),trackAccountAsString);
+        TrackAccount trackAccount = new TrackAccount(accountInfo.getAccountNo(), issueRequest.getOperation());
+        // redisDao.save(trackAccount); not support transaction
+        Properties properties = coreModelStringSerde.convertToFieldValuePair(trackAccount);
+        hashOperations.putAll("trackAccount:"+trackAccount.getTrackNo(),properties);
 
         // assume issueRequest always have a Withdraw operation
         // update account info

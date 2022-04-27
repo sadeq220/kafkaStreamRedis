@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 @Component
 public class CoreModelStringSerde {
@@ -41,5 +42,11 @@ public class CoreModelStringSerde {
             e.printStackTrace();
             return new AccountInfo();
         }
+    }
+    public Properties convertToFieldValuePair(RedisModelCoreBank coreModel){
+        if (coreModel ==null)
+            return null;
+        Properties properties = jacksonObjectMapper.convertValue(coreModel, Properties.class);
+        return properties;
     }
 }

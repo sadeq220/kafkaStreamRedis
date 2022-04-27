@@ -44,4 +44,10 @@ public class CRUDController {
         TrackAccount trackAccount = moneyTransfer.issueRequest(issueRequest);
         return ResponseEntity.ok(trackAccount);
     }
+    @GetMapping("/track/status")
+    public ResponseEntity statusTrack(@RequestParam String trackNo){
+        TrackAccount trackAccount = moneyTransfer.getTrackAccount(trackNo);
+        return ResponseEntity.ok(trackAccount);
+    }
+
 }

@@ -7,6 +7,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -26,8 +27,9 @@ import java.util.Random;
 @SpringBootApplication
 /**
  * NoSQL storage systems provide an alternative to classical RDBMS for horizontal scalability and speed.
- * redis in-memory key-value store .value type could be {string , list , set , orderedSet , stream}
+ * redis in-memory key-value store .keys are always string and value type could be {string , list , set , hash , orderedSet , stream}
  */
+@EnableRedisRepositories
 public class CoreMackApplication {
 
 	public static void main(String[] args) {
