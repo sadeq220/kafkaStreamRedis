@@ -45,6 +45,10 @@ public class CRUDController {
         return ResponseEntity.ok(trackAccount);
     }
     @GetMapping("/track/status")
+    /**
+     * if issueRequest was unsuccessful then there is no trackNo exists at data store
+     * hence response status code would be 404(NOT_FOUND)
+     */
     public ResponseEntity statusTrack(@RequestParam String trackNo){
         TrackAccount trackAccount = moneyTransfer.getTrackAccount(trackNo);
         return ResponseEntity.ok(trackAccount);
