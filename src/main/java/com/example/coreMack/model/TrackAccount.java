@@ -5,6 +5,7 @@ import com.example.coreMack.util.ClientCorrelationIdContextHolder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -20,9 +21,11 @@ public class TrackAccount implements RedisModelCoreBank{
     @Id
     private String trackNo;
     private Operation operation;
+    private BigDecimal amount;
+    private Boolean reversed;
     private LocalDateTime operationTime;
 
-    public TrackAccount(String accountNo,Operation operation){
+    public TrackAccount(String accountNo,Operation operation,BigDecimal amount){
         String correlationId = ClientCorrelationIdContextHolder.getCorrelationId();
         if (correlationId==null){
         Random random = IoCContainerUtil.getBean(Random.class);
@@ -39,6 +42,7 @@ public class TrackAccount implements RedisModelCoreBank{
         this.accountNo=accountNo;
         this.trackNo=correlationId;
         this.operationTime=LocalDateTime.now();
+        this.amount=amount;
     }
     public String getAccountNo() {
         return accountNo;
@@ -71,4 +75,21 @@ public class TrackAccount implements RedisModelCoreBank{
     public void setOperationTime(LocalDateTime operationTime) {
         this.operationTime = operationTime;
     }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Boolean getReversed() {
+        return reversed;
+    }
+
+    public void setReversed(Boolean reversed) {
+        this.reversed = reversed;
+    }
 }
+

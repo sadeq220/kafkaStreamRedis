@@ -33,4 +33,18 @@ public class MoneyTransfer {//implements SessionCallback {
         trackAccount.orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,trackNo+" trackNo not exists!"));
         return trackAccount.get();
     }
+
+    public TrackAccount reverseTrackAccount(String trackNo){
+        Optional<TrackAccount> optionalTrackAccount = redisDao.findById(trackNo);
+        optionalTrackAccount.orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,trackNo+" trackNo not exists!"));
+        TrackAccount trackAccount = optionalTrackAccount.get();
+        trackAccount.setReversed(true);
+        AccountInfo accountInfo = redisTemplateDao.getAccount(trackAccount.getAccountNo());
+        if (trackAccount.getOperation()==Operation.WITHDRAW) {
+            redisTemplateDao.depositMoneyOnReverse(accountInfo, trackAccount);
+        }else{
+            //redisTemplateDao.withdrawMoney(accountInfo,trackAccount);
+        }
+        return trackAccount;
+    }
 }

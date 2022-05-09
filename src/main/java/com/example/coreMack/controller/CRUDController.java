@@ -53,5 +53,10 @@ public class CRUDController {
         TrackAccount trackAccount = moneyTransfer.getTrackAccount(trackNo);
         return ResponseEntity.ok(trackAccount);
     }
+    @PutMapping("/reverse/document")
+    public ResponseEntity reverseDocument(@RequestParam String trackNo){
+        TrackAccount trackAccount = moneyTransfer.reverseTrackAccount(trackNo);
+        return ResponseEntity.ok(trackAccount);
+    }
 
 }

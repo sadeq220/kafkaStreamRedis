@@ -74,7 +74,7 @@ public class RedisTemplateDao {
      */
     public TrackAccount withdrawMoney(IssueRequest issueRequest, AccountInfo accountInfo){
 
-        TrackAccount trackAccount = new TrackAccount(accountInfo.getAccountNo(), issueRequest.getOperation());
+        TrackAccount trackAccount = new TrackAccount(accountInfo.getAccountNo(), issueRequest.getOperation(),issueRequest.getAmount());
         // redisDao.save(trackAccount); not support transaction
         Properties properties = coreModelStringSerde.convertToFieldValuePair(trackAccount);
         hashOperations.putAll("trackAccount:"+trackAccount.getTrackNo(),properties);
@@ -86,6 +86,17 @@ public class RedisTemplateDao {
         String accountAsSerde = coreModelStringSerde.serializeCoreModel(accountInfo);
         valueOperations.set(accountInfo.getAccountNo(),accountAsSerde);
 
+        return trackAccount;
+    }
+    @Transactional
+    public TrackAccount depositMoneyOnReverse(AccountInfo accountInfo, TrackAccount trackAccount){
+        Properties properties = coreModelStringSerde.convertToFieldValuePair(trackAccount);
+        hashOperations.putAll("trackAccount:"+trackAccount.getTrackNo(),properties);
+
+        accountInfo.setAmount(accountInfo.getAmount().add(trackAccount.getAmount()));
+        accountInfo.setLastModificationTrackNo(trackAccount.getTrackNo());
+        String accountAsString = coreModelStringSerde.serializeCoreModel(accountInfo);
+        valueOperations.set(accountInfo.getAccountNo(),accountAsString);
         return trackAccount;
     }
 }
