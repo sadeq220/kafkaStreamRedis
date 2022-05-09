@@ -22,7 +22,7 @@ public class TrackAccount implements RedisModelCoreBank{
     private String trackNo;
     private Operation operation;
     private BigDecimal amount;
-    private Boolean reversed;
+    private Boolean reversed=false;
     private LocalDateTime operationTime;
 
     public TrackAccount(String accountNo,Operation operation,BigDecimal amount){
